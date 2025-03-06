@@ -8,9 +8,9 @@ Everything you need to build a Svelte project, powered by [`sv`](https://github.
    2. `cd OutcomeOptics`
    3. `git pull`
 2. Install the dependencies with `bun install`.
-3. Start a development server with `bun run dev`.
-
-Once you've created a project and installed dependencies with `bun install`, start a development server:
+3. Navigate to production branch with `git checkout {your name}`.
+4. Start a development server with `bun run dev`.
+5. Make changes as necessary
 
 ## Building
 
