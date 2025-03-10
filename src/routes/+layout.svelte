@@ -4,5 +4,7 @@
 	import Header from './_components/header.svelte';
 </script>
 
-<Header />
-{@render children()}
+<main>
+	<Header />
+	{@render children()}
+</main>
