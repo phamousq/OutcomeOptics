@@ -1,5 +1,7 @@
 import adapter from '@sveltejs/adapter-netlify';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import dotenv from 'dotenv';
+dotenv.config();
 ;
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -15,6 +17,11 @@ const config = {
 			edge: false,
 			split: true
 		  })
+	},
+	vite: {
+		define: {
+			'process.env': process.env
+		}
 	}
 };
 
