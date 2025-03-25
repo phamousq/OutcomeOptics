@@ -1,5 +1,6 @@
 <script lang="ts">
     import { AssemblyAI } from 'assemblyai';
+    import { GoogleGenerativeAI } from '@google/generative-ai';
   
     let transcriptionText: string = '';
     let speakerUtterances: string[] = [];
@@ -68,7 +69,13 @@
     }
     
     async function generateGeminiResponse() {
-    
+        const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+        const prompt = `Summerize the following transcript: ${transcriptionText}`;
+
+        const result = await model.generateContent(prompt);
+        geminiResponse = result.response.text();
     }
 </script>
   
@@ -87,6 +94,9 @@
         <!-- <label for="audioUrl">Or Enter Audio URL:</label>
         <input type="text" id="audioUrl" bind:value={audioUrl} /> -->
 
+        
+
+        <h1 class="text-2xl underline">Transcription</h1>
         <button onclick={transcribeAudio} disabled={loading}>
         {loading ? 'Transcribing...' : 'Transcribe Button'}
         </button>
@@ -94,25 +104,27 @@
         {#if error}
         <p style="color: red;">Error: {error}</p>
         {/if}
-
-        <h1 class="text-2xl underline">Transcription</h1>
     
         <!-- {#if transcriptionText}
             <p>{transcriptionText}</p>
         {/if} -->
     
         {#if speakerUtterances.length}
-            <h2>Speakers:</h2>
             <ul>
                 {#each speakerUtterances as utterance}
                 <li>{utterance}</li>
                 {/each}
             </ul>
+        {:else}
+            <p>No transcript found.</p>
         {/if}
     </div>
     <dir>
         <h1 class="text-2xl underline">Gemini</h1>
-        {#if geminiResponse.length}
+        <button onclick={generateGeminiResponse}>Generate Gemini Response</button>
+        {#if !geminiResponse.length}
+            <p>No response generated yet.</p>
+        {:else}
             <p>{geminiResponse}</p>
         {/if}
     </dir>
