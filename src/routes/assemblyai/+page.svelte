@@ -69,6 +69,7 @@
     
     async function generateGeminiResponse() {
     
+    }
 </script>
   
 <main>
@@ -116,3 +117,7 @@
         {/if}
     </dir>
 </main>
+
+<style>
+
+</style>
