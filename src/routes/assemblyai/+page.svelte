@@ -21,7 +21,13 @@
     interface Chapter { startTime: number; endTime: number; text: string };
     const structuredChapters: Chapter[] = $state([]);
     let questionText: string = $state('');
-    let questionTextEmpty: boolean = $derived(questionText.length === 0);
+    let questionCurrent: number = $state(0);
+    let questionPrevious: number = $state(0);
+
+    function handleQuestionTextChange() {
+      questionPrevious = questionCurrent;
+      questionCurrent = questionText.length;
+    }
 
     function handleFileChange(event: Event) {
       const input = event.target as HTMLInputElement;
@@ -190,14 +196,18 @@
             type="text" 
             bind:value={questionText}
             oninput={() => {
+              handleQuestionTextChange();
               // todo implement functionality for pausing and playing with quetsion text 
-              if(questionText.length -1 <= 0){
+              if(
+                (questionPrevious == 0) || (questionText.length == 0)
+              ){
                 jumpTime = currentTime
                 paused = !paused
               }
             }} 
             onkeydown={handleEnter}
         />
+        {questionText.length} - {questionPrevious}
         
         <!-- TODO: add funcionality for adding quetsion text -->
         {#if bookmarks.length}
@@ -227,6 +237,7 @@
 
 
     <div id="gemini">
+      <!-- implement functionality to parse through questions -->
       <h1 class="text-2xl underline">Gemini</h1>
       <input class="w-2xl h-10" type="text" bind:value={promptText} />
       <button onclick={generateGeminiResponse} disabled={geminiLoading} >
