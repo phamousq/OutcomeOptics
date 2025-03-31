@@ -197,7 +197,7 @@
             bind:value={questionText}
             oninput={() => {
               handleQuestionTextChange();
-              // todo implement functionality for pausing and playing with quetsion text 
+              // TODO: implement functionality for pausing and playing with quetsion text 
               if(
                 (questionPrevious == 0) || (questionText.length == 0)
               ){
@@ -207,8 +207,6 @@
             }} 
             onkeydown={handleEnter}
         />
-        {questionText.length} - {questionPrevious}
-        
         <!-- TODO: add funcionality for adding quetsion text -->
         {#if bookmarks.length}
             <!-- TODO: filter by important or question -->
@@ -244,19 +242,21 @@
           {geminiLoading ? 'Generating...' : 'Generate Gemini Response'}
       </button>
       {#if geminiResponse.length}
+          <!-- TODO add markdown functionaltiy  -->
+          <!-- TODO: Add functionality to contest Gemini response -->
           <p>{geminiResponse}</p>
       {:else}
           <p>No response generated yet.</p>
       {/if}
     </div>
-    <div id="Test Output">
+    <!-- <div id="Test Output">
         <h1 class="text-2xl underline">Test Output</h1>
         {transcriptionText}
         <p></p>
         {transcriptUtterances}
         <p></p>
         {structuredChapters}
-    </div>
+    </div> -->
 </main>
 
 <style>
