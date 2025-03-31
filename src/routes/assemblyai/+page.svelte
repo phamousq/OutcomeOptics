@@ -3,7 +3,6 @@
     import { GoogleGenerativeAI } from '@google/generative-ai';
 
     let transcriptionText: string = $state('');
-    let transcriptChapters: string[] = $state([]);
     let transcriptUtterances: string[] = $state([]);
     let assemblyaiLoading: boolean = $state(false);
     let geminiLoading: boolean = $state(false);
@@ -12,13 +11,17 @@
     let audioFile: File | null = null;
     let audioSrc: string | null = $state(null);
     let geminiResponse: string = $state('');
-    let bookmarks: number[] = $state([]);
+    interface Bookmark { time: number, type: 'question' | 'starred', text: string };
+    let bookmarks: Bookmark[] = $state([]);
     let promptText: string = $state('Summarize the following transcript:');
     let currentTime: number | null = $state(null); // seconds
     let duration: number | null = $state(null);
     let paused: boolean = $state(true);
     let jumpTime: number | null = $state(null);
-
+    interface Chapter { startTime: number; endTime: number; text: string };
+    const structuredChapters: Chapter[] = $state([]);
+    let questionText: string = $state('');
+    let questionTextEmpty: boolean = $derived(questionText.length === 0);
 
     function handleFileChange(event: Event) {
       const input = event.target as HTMLInputElement;
@@ -68,10 +71,14 @@
           );
         }
         if (transcript.chapters) {
-          transcriptChapters = transcript.chapters.map(
-            (chapter) => `Chapter ${(chapter.start/1000).toFixed(2)}-${(chapter.end/1000).toFixed(2)}: ${chapter.headline}`
+          transcript.chapters.map(
+            (chapter) => {
+              const newChapter: Chapter = { startTime: Number((chapter.start/1000).toFixed(2)), endTime: Number((chapter.end/1000).toFixed(2)), text: chapter.headline };
+              structuredChapters.push(newChapter);
+            }
           );
         }
+        console.log(structuredChapters);
       } catch (e) {
         if (e instanceof Error) {
           error = e.message;
@@ -92,6 +99,16 @@
         geminiResponse = result.response.text();
         geminiLoading = false;
     }
+    function handleEnter(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+          if(questionText.length > 0){
+            bookmarks = [...bookmarks, { time: +currentTime?.toFixed(2) || 0, type: 'question', text: questionText }];
+            questionText = '';
+          }
+          paused = false;
+        }
+    }
+            
 </script>
   
 <main>
@@ -137,26 +154,20 @@
             <p>No transcript found yet.</p>
         {/if}
     </div>
-    <div id="gemini">
-        <h1 class="text-2xl underline">Gemini</h1>
-        <input class="w-2xl h-10" type="text" bind:value={promptText} />
-        <button onclick={generateGeminiResponse} disabled={geminiLoading} >
-            {geminiLoading ? 'Generating...' : 'Generate Gemini Response'}
-        </button>
-        {#if geminiResponse.length}
-            <p>{geminiResponse}</p>
-        {:else}
-            <p>No response generated yet.</p>
-        {/if}
-    </div>
     <div id="chapters">
         <h1 class="text-2xl underline">Chapters</h1>
-        {#if transcriptChapters.length}
-            <ul>
-                {#each transcriptChapters as chapter}
-                <li>{chapter}</li>
+        {#if structuredChapters.length}
+            <ol>
+                {#each structuredChapters as chapter}
+                  <li>
+                    <button aria-label="Go to chapter" onclick={() => {
+                      currentTime = chapter.startTime
+                      paused = false
+                    }}>{chapter.startTime}: {chapter.text}</button>
+                  </li>
+                  <!-- TODO: add functionality for adding chapter transcript location -->
                 {/each}
-            </ul>
+            </ol>
         {:else}
             <p>No chapters found.</p>
         {/if}
@@ -164,16 +175,42 @@
     <div id="bookmarks">
         <h1 class="text-2xl underline">Bookmarks</h1>
         <button 
-            onclick={() => bookmarks = [...bookmarks, +currentTime?.toFixed(2)]} 
-            disabled={paused}
+            onclick={() => bookmarks = [...bookmarks, { time: +currentTime?.toFixed(2) || 0, type: 'starred', text: '' }]}
+            disabled={!audioSrc}
         >
-            Bookmark
+            Important
         </button>
+        <button 
+            onclick={() => bookmarks = [...bookmarks, { time: +currentTime?.toFixed(2) || 0, type: 'question', text:'' }]}
+            disabled={!audioSrc}
+        >
+            Question
+        </button>
+        <input 
+            type="text" 
+            bind:value={questionText}
+            oninput={() => {
+              // todo implement functionality for pausing and playing with quetsion text 
+              if(questionText.length -1 <= 0){
+                jumpTime = currentTime
+                paused = !paused
+              }
+            }} 
+            onkeydown={handleEnter}
+        />
+        
+        <!-- TODO: add funcionality for adding quetsion text -->
         {#if bookmarks.length}
+            <!-- TODO: filter by important or question -->
             <ol>
                 {#each bookmarks as bookmark}
                     <li>
-                        <button aria-label="Go to bookmark" onclick={() => currentTime = bookmark}>{bookmark}</button>
+                        <button aria-label="Go to bookmark" onclick={() => {
+                          currentTime = bookmark.time
+                          paused = false
+                          }}>
+                            {bookmark.time}: {bookmark.type == 'question' ? `${bookmark.type}: ${bookmark.text}` : `${bookmark.type}`}
+                        </button>
                     </li>
                 {/each}
             </ol>
@@ -181,9 +218,25 @@
         <div id="jumpto">
             <p>Jump to:</p>
             <input type="number" bind:value={jumpTime}/>
-            <button onclick={() => currentTime = Number(jumpTime)}>Go</button>
+            <button onclick={() => {
+              currentTime = Number(jumpTime)
+              paused = false
+              }}>Go</button>
         </div>
         <!-- ! add buttons for question vs important notes to the bookmarks -->
+
+
+    <div id="gemini">
+      <h1 class="text-2xl underline">Gemini</h1>
+      <input class="w-2xl h-10" type="text" bind:value={promptText} />
+      <button onclick={generateGeminiResponse} disabled={geminiLoading} >
+          {geminiLoading ? 'Generating...' : 'Generate Gemini Response'}
+      </button>
+      {#if geminiResponse.length}
+          <p>{geminiResponse}</p>
+      {:else}
+          <p>No response generated yet.</p>
+      {/if}
     </div>
     <div id="Test Output">
         <h1 class="text-2xl underline">Test Output</h1>
@@ -191,7 +244,7 @@
         <p></p>
         {transcriptUtterances}
         <p></p>
-        {transcriptChapters}
+        {structuredChapters}
     </div>
 </main>
 
