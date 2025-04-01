@@ -21,3 +21,10 @@ bun run build
 ```
 
 You can preview the production build with `bun run preview`.
+
+
+## Backend
+- Neon Postgres
+  - [Console](https://console.neon.tech/app/projects/floral-king-92846550/query?branchId=br-white-cloud-a5cfhy79&database=neondb)
+  - dellmed@proton.me
+- Drizzle ORM
