@@ -4,6 +4,8 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
+		"db:migrate": "bun ./src/migrate.ts",
+		"db:generate": "drizzle-kit generate --dialect=postgresql --schema=src/schema.ts --out=./drizzle",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -43,6 +45,7 @@
 		"@google/generative-ai": "^0.24.0",
 		"@neondatabase/serverless": "^1.0.0",
 		"assemblyai": "^4.9.0",
+		"better-auth": "^1.2.5",
 		"drizzle-orm": "^0.41.0"
 	}
 }

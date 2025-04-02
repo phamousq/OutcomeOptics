@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import path from 'node:path';
 
 export async function GET() {
-	const routesDir = path.join(process.cwd(), 'src', 'routes');
+	const routesDir = path.join(process.cwd(), 'src', 'routes', '(app)');
 
 	function getRoutes(dir: string) {
 		const files = fs.readdirSync(dir);
