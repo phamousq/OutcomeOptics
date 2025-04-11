@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+header, footer {
+    padding: 1rem 2rem;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+.page-container {
+    background: #ffffff;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* horizontal alignment */
+    min-height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1400px; /* Prevents overflow on small screens */
+    margin: 0 auto;     /* centers it horizontally */
+}
+main {
+    padding: 2rem;
+    width: 100%;
+}
+.grid {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+.card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 1.5rem;
+    padding-left: 36px;
+    flex: 1;
+    border: 1px solid #ABE7BB;
+}
+.card h2 {
+    margin: 0 0 1rem;
+    font-size: 48px;
+    font-weight: bolder;
+}
+.card h3 {
+    margin: 0 0 1rem;
+    font-size: 20px;
+    font-weight: bold;
+}
+.card p {
+    margin: 0 0 1rem;
+}
+.left {
+    flex: 2;
+}
+.right {
+    flex: 1;
+}
+.button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 24px;
+    width: 108px;
+    height: 41px;
+    background-color: #E1E1E1;
+    font-weight: 500;
+    font-size: 16px;
+}
+.checklist {
+    width: 100%;
+}
+.checklist h3 {
+    margin-top: 42px;
+    margin-bottom: 36px;
+    margin-left: 32px;
+    font-size: 24px;
+    font-weight:700;
+    width: 1000px;
+}
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 36px;
+    border-radius: 24px;
+    margin-bottom: 1rem;
+    background: #fff;
+    height: auto;
+    border: 1px solid #ABE7BB;
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+.task span {
+    font-weight:500;
+}
+.task h4 {
+    font-size: 20px;
+    font-weight: 400;
+    padding:36px 0px;
+}
+.task.priority {
+    background: #ABE7BB;
+}
+.task.priority button {
+    background-color: #ffffff;
+}
+.task.completed {
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    color: #888;
+}
+.task.completed .status {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Adjust spacing between text and checkmark */
+}
+.task.completed .checkmark {
+  color: black;
+}
+.task.top {
+    min-height: 90px;
+}
+.task.top button {
+    background-color: #ABE7BB;
+}
+.task-details {
+    width: 100%;
+    margin-top: 1rem;
+    background: #f9f9f9;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.task-details input {
+    display: block;
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.radio-group {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+.radio-group label {
+	font-weight: normal;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+.task p{
+    padding: 12px 0px;
+}
+.task label{
+    padding: 24px;
+    height: 120px
+}
+.radio-group label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 1;
+	cursor: pointer;
+}
+.radio-group input[type="radio"] {
+	margin: 0;
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+}
+input.small-input {
+	width: 320px; /* or whatever narrower size you like */
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	margin-bottom: 1rem;
+}
+.save-button {
+    background-color: #ABE7BB;
+    color: black;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 108px;
+}
+.save-button:hover {
+  background-color: #60F086;
+}
+.close-button:hover {
+  background-color: #ccc;
+}
+.task-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+
+
+
+
+
+
+
+
+
+/* footer {
+    font-size: 0.875rem;
+    color: #666;
+    border-top: 1px solid #ddd;
+    margin-top: 2rem;
+}
+footer a {
+    margin-right: 1rem;
+    text-decoration: none;
+    color: #666;
+} */
